@@ -1,0 +1,4 @@
+rootProject.name = 'embulk-input-s3_parquet'
+include 'embulk-util-aws-credentials'
+include 'embulk-input-s3_parquet'
+

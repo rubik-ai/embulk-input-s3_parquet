@@ -1,0 +1,26 @@
+dependencies {
+    compile project(":embulk-util-aws-credentials")
+}
+
+task gemspec << { file("build/gemspec").write($/
+Gem::Specification.new do |spec|
+  spec.name          = "${project.name}"
+  spec.version       = "${project.version}"
+  spec.summary       = "S3 file input plugin for Embulk"
+  spec.description   = "Reads files stored on Amazon S3"
+  spec.authors       = ["Piyush Upadhyay"]
+  spec.email         = ["piyush@rubik.ai"]
+  spec.licenses      = ["Apache 2.0"]
+  spec.homepage      = "https://github.com/rubik-ai/embulk-input-s3_parquet"
+
+  spec.files         = `git ls-files`.split("\n") + Dir["classpath/*.jar"]
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.executables   = spec.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  spec.require_paths = ["lib"]
+  spec.has_rdoc      = false
+
+  spec.add_development_dependency "bundler", [">= 1.0"]
+  spec.add_development_dependency "rake", [">= 0.10.0"]
+end
+/$)
+}
