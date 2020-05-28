@@ -1,0 +1,17 @@
+in:
+  type: s3_parquet
+  bucket: container001
+  endpoint: http://127.0.0.1:9001
+  path_prefix: piyush/amazon/productGraph/raw/review/amz-raw-review.047.00.snappy
+  auth_method: basic
+  access_key_id: s3accesskey
+  secret_access_key: s3secretkey
+  default_timezone: Asia/Tokyo
+  canned_acl: bucket-owner-full-control
+  path_style_access_enabled: true
+  parser: {type: none, charset: UTF-8, newline: LF}
+out:
+  type: file
+  formatter: {type: jsonl}
+  file_ext: json
+  path_prefix: json_files/data

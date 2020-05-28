@@ -2,7 +2,7 @@
 
 ## Overview
 
-embulk-input-s3_parquet v0.3.0+ requires Embulk v0.9.12+
+embulk-input-s3_parquet v0.1.0+ requires Embulk v0.9.12+
 
 * Plugin type: **file input**
 * Resume supported: **yes**
@@ -100,7 +100,7 @@ embulk-input-s3_parquet v0.3.0+ requires Embulk v0.9.12+
 in:
   type: s3_parquet
   bucket: my-s3-bucket
-  path_prefix: logs/csv-
+  path_prefix: data/parquet-
   endpoint: s3-us-west-1.amazonaws.com
   access_key_id: ABCXYZ123ABCXYZ123
   secret_access_key: AbCxYz123aBcXyZ123
@@ -112,7 +112,7 @@ To set http proxy configuration:
 in:
   type: s3_parquet
   bucket: my-s3-bucket
-  path_prefix: logs/csv-
+  path_prefix: data/parquet-
   endpoint: s3-us-west-1.amazonaws.com
   access_key_id: ABCXYZ123ABCXYZ123
   secret_access_key: AbCxYz123aBcXyZ123
@@ -121,29 +121,13 @@ in:
     port: 8080
 ```
 
-To skip files using regexp:
-
-```yaml
-in:
-  type: s3_parquet
-  bucket: my-s3-bucket
-  path_prefix: logs/csv-
-  # ...
-  path_match_pattern: \.csv$   # a file will be skipped if its path doesn't match with this pattern
-
-  ## some examples of regexp:
-  #path_match_pattern: /archive/         # match files in .../archive/... directory
-  #path_match_pattern: /data1/|/data2/   # match files in .../data1/... or .../data2/... directory
-  #path_match_pattern: .csv$|.csv.gz$    # match files whose suffix is .csv or .csv.gz
-```
-
 To use AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables:
 
 ```yaml
 in:
   type: s3_parquet
   bucket: my-s3-bucket
-  path_prefix: logs/csv-
+  path_prefix: data/parquet-
   endpoint: s3-us-west-1.amazonaws.com
   auth_method: env
 ```
