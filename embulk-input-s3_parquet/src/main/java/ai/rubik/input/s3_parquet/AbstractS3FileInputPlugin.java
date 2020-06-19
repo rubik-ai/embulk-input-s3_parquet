@@ -12,6 +12,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.avro.Schema;
+import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumWriter;
@@ -207,7 +208,7 @@ public abstract class AbstractS3FileInputPlugin
         ClientConfiguration clientConfig = new ClientConfiguration();
 
         //clientConfig.setProtocol(Protocol.HTTP);
-        clientConfig.setMaxConnections(50); // SDK default: 50
+        clientConfig.setMaxConnections(100); // SDK default: 50
 //        clientConfig.setMaxErrorRetry(3); // SDK default: 3
         clientConfig.setSocketTimeout(8 * 60 * 1000); // SDK default: 50*1000
         clientConfig.setRetryPolicy(PredefinedRetryPolicies.NO_RETRY_POLICY);
@@ -468,6 +469,7 @@ public abstract class AbstractS3FileInputPlugin
 
             ParquetReader reader = null;
             List<GenericRecord> records = new ArrayList<>();
+            Schema schema;
             try {
                 reader = AvroParquetReader.builder(new Path(path)).withConf(conf).build();
                 Object obj = reader.read();
@@ -478,7 +480,14 @@ public abstract class AbstractS3FileInputPlugin
                     }
                     obj = reader.read();
                 }
-                Schema schema = records.get(0).getSchema();
+                if (records.size() == 0) {
+                    schema = SchemaBuilder.record("default") // source's name
+                            .namespace("default") // source's namespace
+                            .fields() // empty fields
+                            .endRecord();
+                } else {
+                    schema = records.get(0).getSchema();
+                }
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 DatumWriter<GenericRecord> writer = new GenericDatumWriter(schema);
                 JsonEncoder encoder = EncoderFactory.get().jsonEncoder(schema, baos);
