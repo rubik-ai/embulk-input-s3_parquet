@@ -11,24 +11,21 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
-public abstract class S3PrefixFileExplorer extends S3FileExplorer
-{
+public abstract class S3PrefixFileExplorer extends S3FileExplorer {
     private static final Logger LOGGER = Exec.getLogger(S3PrefixFileExplorer.class);
 
     protected String pathPrefix;
 
     private final boolean skipGlacierObjects;
 
-    public S3PrefixFileExplorer(final String bucketName, final AmazonS3 s3Client, final RetryExecutor retryExecutor, final String pathPrefix, final boolean skipGlacierObjects)
-    {
+    public S3PrefixFileExplorer(final String bucketName, final AmazonS3 s3Client, final RetryExecutor retryExecutor, final String pathPrefix, final boolean skipGlacierObjects) {
         super(bucketName, s3Client, retryExecutor);
         this.pathPrefix = pathPrefix;
         this.skipGlacierObjects = skipGlacierObjects;
     }
 
     @Override
-    public void addToBuilder(final FileList.Builder builder)
-    {
+    public void addToBuilder(final FileList.Builder builder) {
         do {
             final List<S3ObjectSummary> s3ObjectSummaries = fetch();
 
@@ -41,10 +38,12 @@ public abstract class S3PrefixFileExplorer extends S3FileExplorer
                     throw new ConfigException("Detected an object stored at Glacier. Set \"skip_glacier_objects\" option to \"true\" to skip this.");
                 }
                 if (s.getSize() > 0) {
-                    builder.add(s.getKey(), s.getSize());
-                    if (!builder.needsMore()) {
-                        LOGGER.warn("Too many files matched, stop listing file");
-                        return;
+                    if (s.getKey().contains(".parquet")) {
+                        builder.add(s.getKey(), s.getSize());
+                        if (!builder.needsMore()) {
+                            LOGGER.warn("Too many files matched, stop listing file");
+                            return;
+                        }
                     }
                 }
             }
