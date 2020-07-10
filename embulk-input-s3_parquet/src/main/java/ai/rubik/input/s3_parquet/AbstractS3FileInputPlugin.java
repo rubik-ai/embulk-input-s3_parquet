@@ -1,7 +1,11 @@
 package ai.rubik.input.s3_parquet;
 
 import ai.rubik.input.s3_parquet.explorer.S3NameOrderPrefixFileExplorer;
+import ai.rubik.input.s3_parquet.explorer.S3SingleFileExplorer;
+import ai.rubik.input.s3_parquet.explorer.S3TimeOrderPrefixFileExplorer;
 import ai.rubik.input.s3_parquet.utils.DateUtils;
+import ai.rubik.util.aws.credentials.AwsCredentials;
+import ai.rubik.util.aws.credentials.AwsCredentialsTask;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
@@ -16,16 +20,12 @@ import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumWriter;
-import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.io.JsonEncoder;
 import org.apache.avro.io.NoWrappingJsonEncoder;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.avro.AvroParquetReader;
 import org.apache.parquet.hadoop.ParquetReader;
 import org.embulk.config.*;
-import ai.rubik.input.s3_parquet.explorer.S3SingleFileExplorer;
-import ai.rubik.input.s3_parquet.explorer.S3TimeOrderPrefixFileExplorer;
 import org.embulk.spi.BufferAllocator;
 import org.embulk.spi.Exec;
 import org.embulk.spi.FileInputPlugin;
@@ -34,8 +34,6 @@ import org.embulk.spi.util.InputStreamFileInput;
 import org.embulk.spi.util.InputStreamFileInput.InputStreamWithHints;
 import org.embulk.spi.util.ResumableInputStream;
 import org.embulk.spi.util.RetryExecutor;
-import ai.rubik.util.aws.credentials.AwsCredentials;
-import ai.rubik.util.aws.credentials.AwsCredentialsTask;
 import org.slf4j.Logger;
 
 import java.io.ByteArrayInputStream;
