@@ -18,6 +18,7 @@ import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.JsonEncoder;
+import org.apache.avro.io.NoWrappingJsonEncoder;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.avro.AvroParquetReader;
@@ -375,7 +376,7 @@ public abstract class AbstractS3FileInputPlugin
                         Schema schema = records.get(0).getSchema();
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         DatumWriter<GenericRecord> writer = new GenericDatumWriter(schema);
-                        JsonEncoder encoder = EncoderFactory.get().jsonEncoder(schema, baos);
+                        NoWrappingJsonEncoder encoder = new NoWrappingJsonEncoder(schema, baos);
                         for (GenericRecord genericRecord : records) {
                             writer.write(genericRecord, encoder);
                         }
@@ -490,7 +491,8 @@ public abstract class AbstractS3FileInputPlugin
                 }
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 DatumWriter<GenericRecord> writer = new GenericDatumWriter(schema);
-                JsonEncoder encoder = EncoderFactory.get().jsonEncoder(schema, baos);
+                NoWrappingJsonEncoder encoder = new NoWrappingJsonEncoder(schema, baos);
+
                 for (GenericRecord genericRecord : records) {
                     writer.write(genericRecord, encoder);
                 }
