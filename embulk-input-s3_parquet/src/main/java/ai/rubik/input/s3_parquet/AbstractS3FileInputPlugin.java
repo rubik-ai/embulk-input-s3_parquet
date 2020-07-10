@@ -380,10 +380,9 @@ public abstract class AbstractS3FileInputPlugin
                         }
                         length = baos.toByteArray().length;
                         LOGGER.info("file content length is {}", length);
-                        inputStream = new ByteArrayInputStream(baos.toByteArray());
                         encoder.flush();
                         baos.flush();
-
+                        inputStream = new ByteArrayInputStream(baos.toByteArray());
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
@@ -496,10 +495,9 @@ public abstract class AbstractS3FileInputPlugin
                 }
                 length = baos.toByteArray().length;
                 LOGGER.info("file content length is {}", length);
-                inputStream = new ByteArrayInputStream(baos.toByteArray());
                 encoder.flush();
                 baos.flush();
-
+                inputStream = new ByteArrayInputStream(baos.toByteArray());
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
